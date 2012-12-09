@@ -1,0 +1,31 @@
+<?php
+
+namespace BitTorrent\Announcer\Client;
+
+class uTorrentClient extends TorrentClientAbstract implements TorrentClientInterface {
+
+	protected $version = '1.6';
+
+	function generateKey() {
+		return $this->getPeerTokens(8);
+	}
+
+	function generateId() {
+		return '-UT1600-' . pack('H*', $this->getPeerTokens(24));
+	}
+
+	function getUserAgent() {
+		return 'uTorrent/1600';
+	}
+
+	function getExtraHeader() {
+		return array(
+			'Accept-Encoding' => 'gzip',
+		);
+	}
+
+	function supportedVersions() {
+		return array('1.6');
+	}
+
+}

@@ -1,0 +1,25 @@
+{
+  "name": "espend/torrent-announcer",
+  "type": "library",
+  "description": "Can simulate torrent client requests to a tracker and returns client ips",
+  "keywords": ["bittorrent", "torrent", "announce"],
+  "homepage": "https://github.com/Haehnchen/torrent-announcer",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Daniel Espendiller",
+      "email": "daniel@espendiller.net"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.2",
+	"christeredvartsen/php-bittorrent": "*",
+	"kriswallsmith/buzz": "*"
+  },
+  "support": {
+    "issues": "https://github.com/Haehnchen/torrent-announcer/issues"
+  },
+  "autoload": {
+    "psr-0": { "BitTorrent\\Announcer": "src/" }
+  }
+}
