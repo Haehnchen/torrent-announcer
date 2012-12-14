@@ -15,9 +15,6 @@ class RequestParameter {
 		'downloaded' => 0,
 		'left' => 0,
 		'info_hash' => null,
-		'compact' => 1,
-		'num_want' => 50,
-		'no_peer_id' => null,
 		'event' => self::EVENT_START,
 	);
 
@@ -42,14 +39,6 @@ class RequestParameter {
 		return $this->get('event');
 	}
 
-	function setCompact($value) {
-		return $this->set('compact', $value);
-	}
-
-	function getCompact() {
-		return $this->get('compact');
-	}
-
 	function setDownloaded($value) {
 		return $this->set('downloaded', $value);
 	}
@@ -66,14 +55,6 @@ class RequestParameter {
 		return $this->get('left');
 	}
 
-	function setNumWant($value) {
-		return $this->set('numwant', $value);
-	}
-
-	function getNumWant() {
-		return $this->get('num_want');
-	}
-
 	function setUploaded($value) {
 		return $this->set('uploaded', $value);
 	}
@@ -82,20 +63,13 @@ class RequestParameter {
 		return $this->get('uploaded');
 	}
 
-	function setNoPeerId($value) {
-		return $this->set('no_peer_id', $value);
-	}
-
-	function getNoPeerId() {
-		return $this->get('no_peer_id');
-	}
-
 	function getParameters() {
 		return $this->parameters;
 	}
 
 	function setParameters($parameters) {
 		$this->parameters = $parameters;
+		return $this;
 	}
 
 	function toArray() {
@@ -105,25 +79,24 @@ class RequestParameter {
 			'uploaded' => $this->getUploaded(),
 			'downloaded' => $this->getDownloaded(),
 			'left' => $this->getLeft(),
-			'compact' => $this->getCompact(),
-			'numwant' => $this->getNumwant(),
 		);
 
 		if ($this->getEvent() != self::EVENT_UPDATE) {
 			$parameter['event'] = $this->getEvent();
 		}
 
-		if ($this->getNoPeerId() !== null) {
-			$parameter['no_peer_id'] = (int) $this->getNoPeerId();
-		}
-
 		return $parameter;
-
 	}
 
 	function set($key, $value) {
 		$this->parameters[$key] = $value;
 		return $this;
+	}
+
+	static function createFromArray($array) {
+		$self = new static();
+		$self->setParameters($array);
+		return $self;
 	}
 
 	function get($key, $default = null) {

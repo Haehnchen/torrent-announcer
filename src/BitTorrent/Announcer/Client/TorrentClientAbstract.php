@@ -8,6 +8,10 @@ abstract class TorrentClientAbstract implements TorrentClientInterface {
 	protected $peer_key;
 	protected $peer_port = 3366 ;
 
+	protected $no_peer_id = 1;
+	protected $compact = 1;
+	protected $numwant = 50;
+
 	protected $version;
 
 	function __construct() {
@@ -72,6 +76,32 @@ abstract class TorrentClientAbstract implements TorrentClientInterface {
 
 	public function getPeerPort() {
 		return $this->peer_port;
+	}
+
+	public function setCompact($compact) {
+		$this->compact = $compact;
+		return $this;
+	}
+
+	public function getCompact() {
+		return $this->compact;
+	}
+
+	public function setNoPeerId($no_peer_id) {
+		$this->no_peer_id = $no_peer_id;
+		return $this;
+	}
+
+	public function getNoPeerId() {
+		return $this->no_peer_id;
+	}
+
+	public function setNumwant($numwant) {
+		$this->numwant = $numwant;
+	}
+
+	public function getNumwant() {
+		return $this->numwant;
 	}
 
 }

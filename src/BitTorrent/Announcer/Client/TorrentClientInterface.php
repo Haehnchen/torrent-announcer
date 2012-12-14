@@ -20,4 +20,12 @@ interface TorrentClientInterface {
 	function getPeerKey();
 	function setPeerPort($peer_port);
 	function getPeerPort();
+
+	function setCompact($compact);
+	function getCompact();
+	function setNoPeerId($no_peer_id);
+	function getNoPeerId();
+	function setNumwant($numwant);
+	function getNumwant();
+
 }

@@ -21,6 +21,9 @@ class Request {
 
 	private $announce_url;
 
+
+	private $browser;
+
 	function __construct() {
 		$this->setParameter(new RequestParameter());
 	}
@@ -30,9 +33,13 @@ class Request {
 		$parameter = $this->Parameter()->toArray();
 
 		$parameter['info_hash'] = pack("H*", $this->Parameter()->getInfoHash());
-
 		$parameter['peer_id'] = $this->torrent_client->getPeerId();
+
+		$parameter['compact'] = $this->torrent_client->getNoPeerId();
+		$parameter['no_peer_id'] = $this->torrent_client->getNoPeerId();
+
 		$parameter['port'] = $this->torrent_client->getPeerPort();
+		$parameter['numwant'] = $this->torrent_client->getNumwant();
 
 		if ($peer_id = $this->torrent_client->getPeerKey()) {
 			$parameter['key'] = $peer_id;
@@ -58,22 +65,37 @@ class Request {
 	 */
 	function announce() {
 
+		$this->validateRequest();
+
 		$headers = array();
 
-		$headers['User-Agent'] = $this->torrent_client->getUserAgent();
+		if($this->torrent_client->getUserAgent()) {
+			$headers['User-Agent'] = $this->torrent_client->getUserAgent();
+		}
+
 		$headers = array_merge($headers, (array) $this->torrent_client->getExtraHeader());
 
-		$browser = new Browser();
-		$browser->setClient(new \Buzz\Client\Curl());
+		$url = $this->generateUrl();
+
 
 		/** @var $response \Buzz\Message\Response */
-		$response = $browser->get($this->generateUrl(), $headers);
+		$response = $this->getBrowser()->get($url, $headers);
 		$this->decompressContent($response);
 
 		return new Response($response->getContent());
 	}
 
-	private function decompressContent(\Buzz\Message\Response $response) {
+	private function getBrowser() {
+
+		if(!$this->browser) {
+			$this->browser = new Browser();
+			$this->browser->setClient(new \Buzz\Client\Curl());
+		}
+
+		return $this->browser;
+	}
+
+	private function decompressContent(\Buzz\Message\MessageInterface $response) {
 
 		if (!$content_encoding = $response->getHeader('Content-Encoding')) {
 			return;
@@ -164,7 +186,7 @@ class Request {
 
 	}
 
-	static function createOnTorrent(Torrent $torrent, $client = null) {
+	static function createOnTorrent(Torrent $torrent, TorrentClientInterface $client = null) {
 		$self = new static();
 
 		if($client !== null) {
@@ -172,6 +194,27 @@ class Request {
 		}
 
 		return $self->setTorrentFile($torrent);
+	}
+
+	static function createFromRequestArray($array, TorrentClientInterface $client = null) {
+
+		$self = new static();
+
+		if ($client !== null) {
+			$self->setTorrentClient($client);
+		}
+
+		if (isset($array['announce'])) {
+			$array['announce'] = base64_decode($array['announce']);
+			$self->setAnnounceUrl($array['announce']);
+		}
+
+		if (isset($array['info_hash'])) {
+			$array['info_hash'] = current(unpack('H*', $array['info_hash']));
+		}
+
+		$self->parameter->setParameters($array);
+		return $self;
 	}
 
 	function setParameter(RequestParameter $parameter) {
