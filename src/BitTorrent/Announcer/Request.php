@@ -17,7 +17,7 @@ class Request {
 	private $torrent_client;
 
 	/** @var RequestParameter */
-	private $parameter;
+	var $parameter;
 
 	private $announce_url;
 
@@ -35,7 +35,7 @@ class Request {
 		$parameter['info_hash'] = pack("H*", $this->Parameter()->getInfoHash());
 		$parameter['peer_id'] = $this->torrent_client->getPeerId();
 
-		$parameter['compact'] = $this->torrent_client->getNoPeerId();
+		$parameter['compact'] = $this->torrent_client->getCompact();
 		$parameter['no_peer_id'] = $this->torrent_client->getNoPeerId();
 
 		$parameter['port'] = $this->torrent_client->getPeerPort();
@@ -77,7 +77,6 @@ class Request {
 
 		$url = $this->generateUrl();
 
-
 		/** @var $response \Buzz\Message\Response */
 		$response = $this->getBrowser()->get($url, $headers);
 		$this->decompressContent($response);
@@ -117,6 +116,7 @@ class Request {
 
 	public function setAnnounceUrl($announce_url) {
 		$this->announce_url = $announce_url;
+		return $this;
 	}
 
 	public function getAnnounceUrl() {
@@ -151,6 +151,10 @@ class Request {
 				throw new \RuntimeException('downloaded cant be greater the torrent size');
 			}
 
+			if ($this->Parameter()->getUploaded() > $this->getTorrentFile()->getSize()) {
+				throw new \RuntimeException('uploaded cant be greater the torrent size');
+			}
+
 		}
 
 	}
@@ -171,6 +175,9 @@ class Request {
 		return $this;
 	}
 
+	function getTorrentClient() {
+		return $this->torrent_client;
+	}
 
 	static function findTorrentFileAnnounceUrl(Torrent $torrent) {
 

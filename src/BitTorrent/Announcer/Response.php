@@ -7,7 +7,8 @@ use PHP\BitTorrent\Encoder;
 
 class Response {
 
-	private $response = null;
+	private $response = array();
+	private $compact = true;
 
 	function __construct($response_string = null) {
 		if($response_string !== null) {
@@ -18,6 +19,7 @@ class Response {
 	function setResponse($string) {
 		$decoder = new Decoder();
 		$this->response = $decoder->decode($string);
+		$this->setPeers($this->get('peers', array()));
 	}
 
 	function getResponse() {
@@ -37,16 +39,13 @@ class Response {
 		return $this->isFailure() ? $this->get('failure reason') : null;
 	}
 
-	function getPeers() {
+	function setPeers($peers) {
 
 		$back = array();
 
-		if(!$peers = $this->get('peers')) {
-			return $back;
-		}
-
-		if(is_array($peers)) {
-			return $peers;
+		if (is_array($peers)) {
+			$this->set('peers', $peers);
+			return $this;
 		}
 
 		// we have compact mode here
@@ -59,7 +58,35 @@ class Response {
 			$back[] = $peer;
 		}
 
-		return $back;
+		$this->set('peers', $back);
+
+		return $this;
+	}
+
+	function addPeer($ip, $port, $peer_id = null) {
+
+		$peer = array_filter(array(
+			'ip' => $ip,
+			'port' => $port,
+			'peer_id' => $peer_id,
+		));
+
+		// empty one
+		if(!isset($this->response['peers'])) {
+			$this->response['peers'] = array();
+		}
+
+		$this->response['peers'][] = $peer;
+
+		return $this;
+	}
+
+	function getPeers() {
+		return $this->get('peers', array());
+	}
+
+	function getPeersCount() {
+		return count($this->getPeers());
 	}
 
 	function getComplete() {
@@ -74,13 +101,47 @@ class Response {
 		return $this->get('interval');
 	}
 
+
+	public function setCompactMode($is_compact) {
+		$this->compact = $is_compact;
+		return $this;
+	}
+
+	public function isCompactMode() {
+		return $this->compact;
+	}
+
+	/**
+	 * @param $key
+	 * @param mixed $default
+	 * @return mixed
+	 */
 	function get($key, $default = null) {
 		return isset($this->response[$key]) ? $this->response[$key] : $default;
 	}
 
+	function set($key, $value) {
+		$this->response[$key] = $value;
+		return $this;
+	}
+
 	function render() {
 		$encoder = new Encoder();
-		return $encoder->encode($this->response);
+
+		$response = $this->response;
+
+		if($this->isCompactMode() == true and $this->getPeersCount() > 0) {
+			$response['peers'] = '';
+			foreach($this->getPeers() as $peer) {
+				$response['peers'] .= pack('Nn', ip2long($peer['ip']), $peer['port']);
+			}
+		}
+
+		return $encoder->encode($response);
+	}
+
+	static function create() {
+		return new static();
 	}
 
 }

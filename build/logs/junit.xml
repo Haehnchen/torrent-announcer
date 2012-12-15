@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="PHP BitTorrent test suite" tests="16" assertions="31" failures="0" errors="0" time="1.151639">
+    <testsuite name="BitTorrent\Announcer\RequestParameterTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestParameterTest.php" namespace="BitTorrent\Announcer" fullPackage="BitTorrent.Announcer" tests="3" assertions="5" failures="0" errors="0" time="0.041004">
+      <testcase name="testInvalidInfoHashLength" class="BitTorrent\Announcer\RequestParameterTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestParameterTest.php" line="21" assertions="2" time="0.037978"/>
+      <testcase name="testInfoHashNonHex" class="BitTorrent\Announcer\RequestParameterTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestParameterTest.php" line="30" assertions="2" time="0.000807"/>
+      <testcase name="testInfoHash" class="BitTorrent\Announcer\RequestParameterTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestParameterTest.php" line="37" assertions="1" time="0.002219"/>
+    </testsuite>
+    <testsuite name="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" namespace="BitTorrent\Announcer" fullPackage="BitTorrent.Announcer" tests="8" assertions="15" failures="0" errors="0" time="1.031064">
+      <testcase name="testInvalidAnnounceUrl" class="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" line="20" assertions="1" time="0.035585"/>
+      <testcase name="testInvalidUploadedOnStart" class="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" line="29" assertions="2" time="0.352640"/>
+      <testcase name="testInvalidDownloadedOnStart" class="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" line="39" assertions="2" time="0.087248"/>
+      <testcase name="testUploadedBiggerThanSize" class="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" line="49" assertions="2" time="0.113727"/>
+      <testcase name="testDownloadedBiggerThanSize" class="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" line="59" assertions="2" time="0.138769"/>
+      <testcase name="testNonPeerId" class="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" line="69" assertions="2" time="0.125346"/>
+      <testcase name="testNoAnnounceUrlFound" class="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" line="80" assertions="2" time="0.099430"/>
+      <testcase name="testAnnounceFinderSingleAndList" class="BitTorrent\Announcer\RequestTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\RequestTest.php" line="89" assertions="2" time="0.078319"/>
+    </testsuite>
+    <testsuite name="BitTorrent\Announcer\ResponseTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\ResponseTest.php" namespace="BitTorrent\Announcer" fullPackage="BitTorrent.Announcer" tests="5" assertions="11" failures="0" errors="0" time="0.079571">
+      <testcase name="testResponse" class="BitTorrent\Announcer\ResponseTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\ResponseTest.php" line="23" assertions="5" time="0.056599"/>
+      <testcase name="testPeersResponse" class="BitTorrent\Announcer\ResponseTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\ResponseTest.php" line="37" assertions="2" time="0.000358"/>
+      <testcase name="testCompactPeersResponse" class="BitTorrent\Announcer\ResponseTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\ResponseTest.php" line="52" assertions="1" time="0.001234"/>
+      <testcase name="testisCompactPeersResponse" class="BitTorrent\Announcer\ResponseTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\ResponseTest.php" line="62" assertions="1" time="0.000377"/>
+      <testcase name="testFailureResponse" class="BitTorrent\Announcer\ResponseTest" file="Y:\silex\vendor\espend\torrent-announcer\tests\BitTorrent\Announcer\ResponseTest.php" line="74" assertions="2" time="0.021003"/>
+    </testsuite>
+  </testsuite>
+</testsuites>
