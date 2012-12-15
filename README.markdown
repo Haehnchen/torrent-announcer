@@ -1,5 +1,7 @@
 # BitTorrent Tracker Announcer
 
+[![Build Status](https://travis-ci.org/Haehnchen/torrent-announcer.png)](https://travis-ci.org/Haehnchen/torrent-announcer)
+
 ## Requirements
 requires PHP 5.3.x or above. The recommended version is 5.3.2 or newer.
 
