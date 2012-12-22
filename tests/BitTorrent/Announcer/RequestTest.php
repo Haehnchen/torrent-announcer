@@ -100,15 +100,30 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testCreateRequestFromArray() {
 
-		$global = array(
-			'info_hash' => sha1('Hello World', true),
-			'port' => 1337,
-		);
+		$get_request = 'info_hash=%80%17%d2%b9%2b%08Ob%ac%0c%a1%9a%40%b4%18%2a%91%07%caB&peer_id=-UT1600-%da%81%14Q%9d%20xo%c0%caLf&port=47143&uploaded=222&downloaded=333&left=11111&key=179C5900&numwant=200&compact=1&no_peer_id=1&event=start';
+		parse_str($get_request, $global);
 
 		$request = Request::createFromRequestArray(PlainTorrentClient::createFromGlobals($global), $global);
 
-		$this->assertEquals(sha1('Hello World'), $request->parameter->getInfoHash());
-		$this->assertEquals($global['port'], $request->getTorrentClient()->getPeerPort());
+		$this->assertEquals('8017d2b92b084f62ac0ca19a40b4182a9107ca42', $request->parameter->getInfoHash());
+		$this->assertEquals(47143, $request->getTorrentClient()->getPeerPort());
+	}
+
+	/**
+	 * @covers BitTorrent\Announcer\Request::createFromRequestArray
+	 */
+	public function testParameterRequestFromRequest() {
+
+		$get_request = 'info_hash=%80%17%d2%b9%2b%08Ob%ac%0c%a1%9a%40%b4%18%2a%91%07%caB&peer_id=-UT1600-%da%81%14Q%9d%20xo%c0%caLf&port=47143&uploaded=222&downloaded=333&left=11111&key=179C5900&numwant=200&compact=1&no_peer_id=1&event=start';
+		parse_str($get_request, $global);
+
+		$request = Request::createFromRequestArray(PlainTorrentClient::createFromGlobals($global), $global);
+		$this->assertEquals(333, $request->parameter->getDownloaded());
+		$this->assertEquals(222, $request->parameter->getUploaded());
+		$this->assertEquals(11111, $request->parameter->getLeft());
+		$this->assertEquals('8017d2b92b084f62ac0ca19a40b4182a9107ca42', $request->parameter->getInfoHash());
+		$this->assertEquals('start', $request->parameter->getEvent());
+
 	}
 
 	/**

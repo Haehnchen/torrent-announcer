@@ -36,7 +36,7 @@ class RequestParameter {
 	}
 
 	function getEvent() {
-		return $this->get('event');
+		return $this->get('event', 'update');
 	}
 
 	function setDownloaded($value) {
@@ -68,6 +68,11 @@ class RequestParameter {
 	}
 
 	function setParameters($parameters) {
+
+		if(isset($parameters['info_hash']) && !preg_match("/^[a-f0-9]{1,}$/is", $parameters['info_hash'])) {
+			$parameters['info_hash'] = current(unpack('H*', $parameters['info_hash']));
+		}
+
 		$this->parameters = $parameters;
 		return $this;
 	}
@@ -81,7 +86,7 @@ class RequestParameter {
 			'left' => $this->getLeft(),
 		);
 
-		if ($this->getEvent() != self::EVENT_UPDATE) {
+		if ($this->getEvent() && $this->getEvent() != self::EVENT_UPDATE) {
 			$parameter['event'] = $this->getEvent();
 		}
 
@@ -100,7 +105,7 @@ class RequestParameter {
 	}
 
 	function get($key, $default = null) {
-		return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
+		return isset($this->parameters[$key]) ? $this->parameters[$key] : $default;
 	}
 
 }
