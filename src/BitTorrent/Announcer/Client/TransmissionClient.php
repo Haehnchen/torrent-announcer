@@ -4,6 +4,12 @@ namespace BitTorrent\Announcer\Client;
 
 class TransmissionClient extends Abstracts\TorrentClientAbstract implements Abstracts\TorrentClientInterface {
 
+	/**
+	 * Big change on 0.8 >=
+	 *
+	 * @link: https://trac.transmissionbt.com/wiki/PeerId
+	 * @var string
+	 */
 	protected $version = '0.6';
 
 	function getKeyTokens() {
@@ -11,15 +17,30 @@ class TransmissionClient extends Abstracts\TorrentClientAbstract implements Abst
 	}
 
 	function generateKey() {
-		return $this->getPeerTokens(20);
+		return $this->getPeerTokens(8);
 	}
 
 	function generateId() {
-		return '-TR0006-' . $this->getPeerTokens(12);
+
+		if ($this->version == '0.6') {
+			return '-TR0006-' . $this->getPeerTokens(12);
+		}
+
+		// -TR1330- Official 1.33 release
+		// -TR2030- Official 2.03 release
+		// -TR2300- Official 2.3 release!?
+		list($major, $minor) = explode('.', $this->version);
+		return '-TR' . $major . str_pad($minor, 2, '0') . '0-' . $this->getPeerTokens(12);
 	}
 
 	function getUserAgent() {
-		return 'Transmission/0.6';
+
+		if($this->version == '0.6') {
+			return 'Transmission/0.6';
+		}
+
+		// Transmission/1.32 (6455) Official 1.32 release
+		return 'Transmission/' . $this->version;
 	}
 
 	function getExtraHeader() {
@@ -30,7 +51,7 @@ class TransmissionClient extends Abstracts\TorrentClientAbstract implements Abst
 	}
 
 	function supportsVersion($version) {
-		return in_array($version, array('0.6'));
+		return $version == '0.6' OR version_compare($version, '1', '>=');
 	}
 
 }

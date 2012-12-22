@@ -14,9 +14,21 @@ abstract class TorrentClientAbstract implements TorrentClientInterface {
 
 	protected $version;
 
-	function __construct() {
+	function __construct($version = null) {
+
+		// setVersion will regenerate keys
+		if($version !== null) {
+			$this->setVersion($version);
+		} else {
+			$this->initRandomKeys();
+		}
+
+	}
+
+	function initRandomKeys() {
 		$this->peer_id = $this->generateId();
 		$this->peer_key = $this->generateKey();
+		return $this;
 	}
 
 	protected function getKeyTokens() {
@@ -41,7 +53,9 @@ abstract class TorrentClientAbstract implements TorrentClientInterface {
 			throw new \RuntimeException('Unknown version string: ' . $version);
 		}
 
-		$this->__construct();
+		$this->version = $version;
+
+		$this->initRandomKeys();
 
 		return $this;
 	}
