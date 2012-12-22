@@ -1,8 +1,8 @@
 <?php
 
-namespace BitTorrent\Announcer;
+namespace BitTorrent\Announcer\Client;
 
-class TransmissionClient extends TorrentClientAbstract implements TorrentClientInterface {
+class TransmissionClient extends Abstracts\TorrentClientAbstract implements Abstracts\TorrentClientInterface {
 
 	protected $version = '0.6';
 
@@ -29,8 +29,8 @@ class TransmissionClient extends TorrentClientAbstract implements TorrentClientI
 		);
 	}
 
-	function supportedVersions() {
-		return array('0.6');
+	function supportsVersion($version) {
+		return in_array($version, array('0.6'));
 	}
 
 }

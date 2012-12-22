@@ -2,7 +2,7 @@
 
 namespace BitTorrent\Announcer\Client;
 
-class uTorrentClient extends TorrentClientAbstract implements TorrentClientInterface {
+class uTorrentClient extends Abstracts\TorrentClientAbstract implements Abstracts\TorrentClientInterface {
 
 	protected $version = '1.6';
 
@@ -24,8 +24,8 @@ class uTorrentClient extends TorrentClientAbstract implements TorrentClientInter
 		);
 	}
 
-	function supportedVersions() {
-		return array('1.6');
+	function supportsVersion($version) {
+		return in_array($version, array('1.6'));
 	}
 
 }

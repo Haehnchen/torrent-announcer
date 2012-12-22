@@ -1,16 +1,15 @@
 <?php
 
-namespace BitTorrent\Announcer\Client;
+namespace BitTorrent\Announcer\Client\Abstracts;
 
 interface TorrentClientInterface {
-	function getKeyTokens();
 
 	function getUserAgent();
 	function getExtraHeader();
 	function generateKey();
 	function generateId();
 
-	function supportedVersions();
+	function supportsVersion($version);
 
 	function setVersion($version);
 	function getVersion();

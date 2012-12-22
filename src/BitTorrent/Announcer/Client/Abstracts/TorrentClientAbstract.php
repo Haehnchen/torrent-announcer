@@ -1,6 +1,6 @@
 <?php
 
-namespace BitTorrent\Announcer\Client;
+namespace BitTorrent\Announcer\Client\Abstracts;
 
 abstract class TorrentClientAbstract implements TorrentClientInterface {
 
@@ -19,7 +19,7 @@ abstract class TorrentClientAbstract implements TorrentClientInterface {
 		$this->peer_key = $this->generateKey();
 	}
 
-	function getKeyTokens() {
+	protected function getKeyTokens() {
 		return 'abcdef0123456789';
 	}
 
@@ -37,17 +37,13 @@ abstract class TorrentClientAbstract implements TorrentClientInterface {
 
 	function setVersion($version) {
 
-		if(!$this->isSupported($version)) {
+		if(!$this->supportsVersion($version)) {
 			throw new \RuntimeException('Unknown version string: ' . $version);
 		}
 
 		$this->__construct();
 
 		return $this;
-	}
-
-	function isSupported($version) {
-		return in_array($version, $this->supportedVersions());
 	}
 
 	function getVersion() {

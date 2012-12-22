@@ -3,17 +3,17 @@
 namespace BitTorrent\Announcer;
 
 use PHP\BitTorrent\Torrent;
-use BitTorrent\Announcer\Client\TorrentClientInterface;
+use BitTorrent\Announcer\Client\Abstracts\TorrentClientInterface;
 
 use Buzz\Browser;
 
 
 class Request {
 
-	/** @var \PHP\BitTorrent\Torrent */
+	/** @var Torrent */
 	private $torrent_file;
 
-	/** @var  \BitTorrent\Announcer\Client\TorrentClientInterface */
+	/** @var  TorrentClientInterface */
 	private $torrent_client;
 
 	/** @var RequestParameter */

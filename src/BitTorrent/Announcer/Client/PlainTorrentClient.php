@@ -2,9 +2,9 @@
 
 namespace BitTorrent\Announcer\Client;
 
-class PlainTorrentClient extends TorrentClientAbstract implements TorrentClientInterface {
+class PlainTorrentClient extends Abstracts\TorrentClientAbstract implements Abstracts\TorrentClientInterface {
 
-	protected $version = '1.6';
+	protected $version = 0;
 
 	protected $user_agent = '';
 	protected $extra_header = array();
@@ -47,7 +47,12 @@ class PlainTorrentClient extends TorrentClientAbstract implements TorrentClientI
 		return $this;
 	}
 
-	static function createFromGlobals() {
+	static function createFromGlobals($array = null) {
+
+		if($array === null) {
+			$array = $_GET;
+		}
+
 		$self = new static();
 
 		if(isset($_SERVER['HTTP_USER_AGENT'])) {
@@ -61,32 +66,36 @@ class PlainTorrentClient extends TorrentClientAbstract implements TorrentClientI
 			$self->setExtraHeader($headers);
 		}
 
-		if (isset($_GET['peer_id'])) {
-			$self->setPeerId($_GET['peer_id']);
+		if (isset($array['peer_id'])) {
+			$self->setPeerId($array['peer_id']);
 		}
 
-		if (isset($_GET['port'])) {
-			$self->setPeerPort($_GET['port']);
+		if (isset($array['port'])) {
+			$self->setPeerPort($array['port']);
 		}
 
-		if (isset($_GET['key'])) {
-			$self->setPeerKey($_GET['key']);
+		if (isset($array['key'])) {
+			$self->setPeerKey($array['key']);
 		}
 
-		if (isset($_GET['numwant'])) {
-			$self->setNumwant($_GET['numwant']);
+		if (isset($array['numwant'])) {
+			$self->setNumwant($array['numwant']);
 		}
 
-		if (isset($_GET['compact'])) {
-			$self->setCompact($_GET['compact']);
+		if (isset($array['compact'])) {
+			$self->setCompact($array['compact']);
 		}
 
-		if (isset($_GET['no_peer_id'])) {
-			$self->setNoPeerId($_GET['no_peer_id']);
+		if (isset($array['no_peer_id'])) {
+			$self->setNoPeerId($array['no_peer_id']);
 		}
 
 		return $self;
 
+	}
+
+	function supportsVersion($version) {
+		return true;
 	}
 
 }
