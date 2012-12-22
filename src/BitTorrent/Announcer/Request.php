@@ -203,9 +203,13 @@ class Request {
 		return $self->setTorrentFile($torrent);
 	}
 
-	static function createFromRequestArray($array, TorrentClientInterface $client = null) {
+	static function createFromRequestArray(TorrentClientInterface $client = null, $array = null) {
 
 		$self = new static();
+
+		if($array === null) {
+			$array = $_GET;
+		}
 
 		if ($client !== null) {
 			$self->setTorrentClient($client);

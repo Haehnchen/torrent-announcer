@@ -32,6 +32,6 @@ Mainly for developing you can overwrite the announce url on your favorite bittor
 ```php
 <?php
 #index.php?announce=aHR0cDovL3RvcnJlbnQudWJ1bnR1LmNvbTo2OTY5L2Fubm91bmNl
-$req = TorrentRequest::createFromRequestArray($_GET, PlainTorrentClient::createFromGlobals());
+$req = TorrentRequest::createFromRequestArray(PlainTorrentClient::createFromGlobals());
 echo $req->announce()->render(); // output: d8:completei211e10:inc[...]
 ```

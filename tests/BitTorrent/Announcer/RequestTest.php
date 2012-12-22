@@ -4,6 +4,9 @@ namespace BitTorrent\Announcer;
 
 use BitTorrent\Announcer\Request;
 use PHP\BitTorrent\Torrent;
+
+use BitTorrent\Announcer\Client\PlainTorrentClient;
+
 class RequestTest extends \PHPUnit_Framework_TestCase {
 
 	/** @var Request */
@@ -90,6 +93,22 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 		$torrent = Torrent::createFromTorrentFile(__DIR__ . '/Fixtures/extra.torrent');
 		$this->assertEquals('http://www.google.de', Request::findTorrentFileAnnounceUrl($torrent->setAnnounce('http://www.google.de')->setAnnounceList(null)));
 		$this->assertEquals('http://www.google.de', Request::findTorrentFileAnnounceUrl($torrent->setAnnounce(null)->setAnnounceList(array('http://www.google.de'))));
+	}
+
+	/**
+	 * @covers BitTorrent\Announcer\Request::testCreateRequestFromArray
+	 */
+	public function testCreateRequestFromArray() {
+
+		$global = array(
+			'info_hash' => sha1('Hello World', true),
+			'port' => 1337,
+		);
+
+		$request = Request::createFromRequestArray(PlainTorrentClient::createFromGlobals($global), $global);
+
+		$this->assertEquals(sha1('Hello World'), $request->parameter->getInfoHash());
+		$this->assertEquals($global['port'], $request->getTorrentClient()->getPeerPort());
 	}
 
 	/**
