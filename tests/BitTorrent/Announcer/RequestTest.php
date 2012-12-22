@@ -96,7 +96,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers BitTorrent\Announcer\Request::testCreateRequestFromArray
+	 * @covers BitTorrent\Announcer\Request::createFromRequestArray
 	 */
 	public function testCreateRequestFromArray() {
 
