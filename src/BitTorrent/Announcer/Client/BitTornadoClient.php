@@ -2,7 +2,7 @@
 
 namespace BitTorrent\Announcer\Client;
 
-class BitTornado extends Abstracts\TorrentClientAbstract implements Abstracts\TorrentClientInterface {
+class BitTornadoClient extends Abstracts\TorrentClientAbstract implements Abstracts\TorrentClientInterface {
 
 	protected $version = '0.3.18';
 

@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/Haehnchen/torrent-announcer.png)](https://travis-ci.org/Haehnchen/torrent-announcer)
 
+BitTorrent Tracker Announcer can request a BitTorrent Tracker for Torrent details. You can then output eg the peerlist or the seeder/leecher count.
+
 ## Requirements
 requires PHP 5.3.x or above. The recommended version is 5.3.2 or newer.
 
@@ -34,4 +36,37 @@ Mainly for developing you can overwrite the announce url on your favorite bittor
 #index.php?announce=aHR0cDovL3RvcnJlbnQudWJ1bnR1LmNvbTo2OTY5L2Fubm91bmNl
 $req = TorrentRequest::createFromRequestArray(PlainTorrentClient::createFromGlobals());
 echo $req->announce()->render(); // output: d8:completei211e10:inc[...]
+```
+
+### Clients
+Every BitTorrent uses his own announce Parameters. Here some common prefined classes for simulate the different Requests to a Tracker. You can also implement new one with the help of `TorrentClientInterface`.
+
+```
+PlainTorrentClient
+BitTornadoClient (TorrentFlux)
+TransmissionClient
+uTorrentClient
+```
+
+### Parameters
+All BitTorrent announce Parameter are mapped to different classes to handle them in a better way.
+```
+BitTorrent\Announcer\Request
+ - announce_url
+
+BitTorrent\Announcer\RequestParamter
+ - info_hash
+ - uploaded
+ - downloaded
+ - left
+ - event
+ 
+BitTorrent\Announcer\Client\Abstracts\TorrentClientInterface
+ - peer_id
+ - compact
+ - no_peer_id
+ - port
+ - numwant
+ - key
+ - (User-Agent, Header)
 ```

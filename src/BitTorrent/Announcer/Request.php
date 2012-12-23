@@ -30,9 +30,9 @@ class Request {
 
 	private function generateParameter() {
 
-		$parameter = $this->Parameter()->toArray();
+		$parameter = $this->parameter->toArray();
 
-		$parameter['info_hash'] = pack("H*", $this->Parameter()->getInfoHash());
+		$parameter['info_hash'] = pack("H*", $this->parameter->getInfoHash());
 		$parameter['peer_id'] = $this->torrent_client->getPeerId();
 
 		$parameter['compact'] = $this->torrent_client->getCompact();
@@ -48,7 +48,7 @@ class Request {
 		return http_build_query($parameter);
 	}
 
-	function generateUrl() {
+	function getUrl() {
 		$announce_url = $this->getAnnounceUrl();
 		$query_parameter = $this->generateParameter();
 
@@ -75,7 +75,7 @@ class Request {
 
 		$headers = array_merge($headers, (array) $this->torrent_client->getExtraHeader());
 
-		$url = $this->generateUrl();
+		$url = $this->getUrl();
 
 		/** @var $response \Buzz\Message\Response */
 		$response = $this->getBrowser()->get($url, $headers);
@@ -129,7 +129,7 @@ class Request {
 			throw new \RuntimeException('no announce url found');
 		}
 
-		if (!$this->Parameter()->getInfoHash()) {
+		if (!$this->parameter->getInfoHash()) {
 			throw new \RuntimeException('no info_hash found');
 		}
 
@@ -137,9 +137,9 @@ class Request {
 			throw new \RuntimeException('no peer_id found');
 		}
 
-		if ($this->Parameter()->getEvent() == RequestParameter::EVENT_START) {
+		if ($this->parameter->getEvent() == RequestParameter::EVENT_START) {
 
-			if ($this->Parameter()->getDownloaded() > 0 OR $this->Parameter()->getUploaded() > 0) {
+			if ($this->parameter->getDownloaded() > 0 OR $this->parameter->getUploaded() > 0) {
 				throw new \RuntimeException('started event cant have downloaded or uploaded != 0');
 			}
 
@@ -147,11 +147,11 @@ class Request {
 
 		if ($this->getTorrentFile()) {
 
-			if ($this->Parameter()->getDownloaded() > $this->getTorrentFile()->getSize()) {
+			if ($this->parameter->getDownloaded() > $this->getTorrentFile()->getSize()) {
 				throw new \RuntimeException('downloaded cant be greater the torrent size');
 			}
 
-			if ($this->Parameter()->getUploaded() > $this->getTorrentFile()->getSize()) {
+			if ($this->parameter->getUploaded() > $this->getTorrentFile()->getSize()) {
 				throw new \RuntimeException('uploaded cant be greater the torrent size');
 			}
 
@@ -162,7 +162,7 @@ class Request {
 	function setTorrentFile(Torrent $torrent) {
 		$this->torrent_file = $torrent;
 		$this->setAnnounceUrl(static::findTorrentFileAnnounceUrl($torrent));
-		$this->Parameter()->setInfoHash($torrent->getHash());
+		$this->parameter->setInfoHash($torrent->getHash());
 		return $this;
 	}
 
@@ -230,10 +230,6 @@ class Request {
 
 	function setParameter(RequestParameter $parameter) {
 		$this->parameter = $parameter;
-	}
-
-	function Parameter() {
-		return $this->parameter;
 	}
 
 }

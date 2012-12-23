@@ -23,4 +23,16 @@ class PlainTorrentClientTest extends \PHPUnit_Framework_TestCase {
 		$this->assertStringStartsWith('-UT1600-', $client->getPeerId());
 	}
 
+	/**
+	 * @covers BitTorrent\Announcer\Client\PlainTorrentClient::getUserAgent
+	 * @covers BitTorrent\Announcer\Client\PlainTorrentClient::createFromGlobals
+	 */
+	public function testTestUserAgent() {
+
+		$_SERVER['HTTP_USER_AGENT'] = 'PlainPHPClient/1.2';
+
+		$client = PlainTorrentClient::createFromGlobals(array());
+		$this->assertEquals('PlainPHPClient/1.2', $client->getUserAgent());
+	}
+
 }

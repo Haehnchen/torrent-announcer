@@ -127,6 +127,38 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @covers BitTorrent\Announcer\Request::getUrl
+	 */
+	public function testUrlGenerator() {
+
+		$request = $this->createRequest();
+		$this->assertContains(urlencode(pack('H*', 'B75B955E703DC3EC9696018C53BE9CB940F27856')), $request->getUrl());
+
+		$request->parameter->setLeft('1234567');
+		$this->assertContains('1234567', $request->getUrl());
+
+		$this->assertContains('peer_id=-UT', $request->getUrl());
+
+	}
+
+	/**
+	 * @covers BitTorrent\Announcer\Request::getUrl
+	 */
+	public function testUrlGeneratorParameter() {
+
+		$request = $this->createRequest();
+
+		$request->setAnnounceUrl('http://example.com');
+		$this->assertStringStartsWith('http://example.com?info_hash', $request->getUrl());
+		$this->assertNotContains('?&', $request->getUrl());
+		$this->assertStringStartsNotWith('http://example.com&', $request->getUrl());
+
+		$request->setAnnounceUrl('http://example.com?test=p');
+		$this->assertStringStartsWith('http://example.com?test=p&', $request->getUrl());
+		$this->assertNotContains('?&', $request->getUrl());
+	}
+
+	/**
 	 * @return Request
 	 */
 	private function createRequest() {
