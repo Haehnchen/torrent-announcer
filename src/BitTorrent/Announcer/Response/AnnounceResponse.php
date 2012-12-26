@@ -1,14 +1,10 @@
 <?php
 
-namespace BitTorrent\Announcer;
+namespace BitTorrent\Announcer\Response;
 
-use PHP\BitTorrent\Decoder;
-use PHP\BitTorrent\Encoder;
+class AnnounceResponse extends Abstracts\ResponseAbstract {
 
-class Response {
-
-	private $response = array();
-	private $compact = true;
+	protected $compact = true;
 
 	function __construct($response_string = null) {
 		if($response_string !== null) {
@@ -17,26 +13,12 @@ class Response {
 	}
 
 	function setResponse($string) {
-		$decoder = new Decoder();
-		$this->response = $decoder->decode($string);
+		parent::setResponse($string);
 		$this->setPeers($this->get('peers', array()));
 	}
 
-	function getResponse() {
-
-		if($this->response === null) {
-			throw new \RuntimeException('You need to set a request first.');
-		}
-
-		return $this->response;
-	}
-
-	function isFailure() {
-		return (bool) $this->get('failure reason', false);
-	}
-
-	function getFailure() {
-		return $this->isFailure() ? $this->get('failure reason') : null;
+	function getInterval() {
+		return $this->get('interval');
 	}
 
 	function setPeers($peers) {
@@ -44,11 +26,13 @@ class Response {
 		$back = array();
 
 		if (is_array($peers)) {
+			$this->setCompactMode(false);
 			$this->set('peers', $peers);
 			return $this;
 		}
 
 		// we have compact mode here
+		$this->setCompactMode(true);
 		$peers = str_split($peers, 6);
 		foreach ($peers as $row) {
 
@@ -89,19 +73,6 @@ class Response {
 		return count($this->getPeers());
 	}
 
-	function getComplete() {
-		return $this->get('complete');
-	}
-
-	function getIncomplete() {
-		return $this->get('incomplete');
-	}
-
-	function getInterval() {
-		return $this->get('interval');
-	}
-
-
 	public function setCompactMode($is_compact) {
 		$this->compact = $is_compact;
 		return $this;
@@ -111,22 +82,7 @@ class Response {
 		return $this->compact;
 	}
 
-	/**
-	 * @param $key
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	function get($key, $default = null) {
-		return isset($this->response[$key]) ? $this->response[$key] : $default;
-	}
-
-	function set($key, $value) {
-		$this->response[$key] = $value;
-		return $this;
-	}
-
 	function render() {
-		$encoder = new Encoder();
 
 		$response = $this->response;
 
@@ -137,11 +93,7 @@ class Response {
 			}
 		}
 
-		return $encoder->encode($response);
-	}
-
-	static function create() {
-		return new static();
+		return $this->renderer($response);
 	}
 
 }

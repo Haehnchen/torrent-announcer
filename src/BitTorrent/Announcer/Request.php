@@ -7,7 +7,6 @@ use BitTorrent\Announcer\Client\Abstracts\TorrentClientInterface;
 
 use Buzz\Browser;
 
-
 class Request {
 
 	/** @var Torrent */
@@ -61,27 +60,53 @@ class Request {
 	}
 
 	/**
-	 * @return Response
+	 * @return Response\AnnounceResponse
 	 */
 	function announce() {
-
 		$this->validateRequest();
-
-		$headers = array();
-
-		if($this->torrent_client->getUserAgent()) {
-			$headers['User-Agent'] = $this->torrent_client->getUserAgent();
-		}
-
-		$headers = array_merge($headers, (array) $this->torrent_client->getExtraHeader());
 
 		$url = $this->getUrl();
 
+		return new Response\AnnounceResponse($this->sendRequest($url)->getContent());
+	}
+
+	function scrape() {
+
+		$announce_url = str_replace('announce', 'scrape', $this->getAnnounceUrl());
+
+		$url_parsed = parse_url($announce_url);
+
+		$query_parameter = (!isset($url_parsed["query"]) ? '?' : '&') . 'info_hash=' . urlencode(pack("H*", $this->parameter->getInfoHash()));
+
+		$url = $announce_url . $query_parameter;
+
+		return new Response\ScrapeResponse($this->sendRequest($url)->getContent());
+	}
+
+	/**
+	 * @param $url
+	 * @return \Buzz\Message\Response
+	 */
+	private function sendRequest($url) {
+
 		/** @var $response \Buzz\Message\Response */
-		$response = $this->getBrowser()->get($url, $headers);
+		$response = $this->getBrowser()->get($url, $this->getTorrentClientHeader());
 		$this->decompressContent($response);
 
-		return new Response($response->getContent());
+		return $response;
+	}
+
+	private function getTorrentClientHeader() {
+
+		$headers = array();
+
+		if ($this->torrent_client->getUserAgent()) {
+			$headers['User-Agent'] = $this->torrent_client->getUserAgent();
+		}
+
+		$headers = array_merge($headers, (array)$this->torrent_client->getExtraHeader());
+
+		return $headers;
 	}
 
 	private function getBrowser() {
