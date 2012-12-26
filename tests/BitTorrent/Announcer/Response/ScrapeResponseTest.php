@@ -14,11 +14,11 @@ class ScrapeResponseTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers BitTorrent\Announcer\Response\ScraperResponse::getComplete
-	 * @covers BitTorrent\Announcer\Response\ScraperResponse::getDownloaded
-	 * @covers BitTorrent\Announcer\Response\ScraperResponse::getIncomplete
-	 * @covers BitTorrent\Announcer\Response\ScraperResponse::getName
-	 * @covers BitTorrent\Announcer\Response\ScraperResponse::render
+	 * @covers BitTorrent\Announcer\Response\ScrapeResponse::getComplete
+	 * @covers BitTorrent\Announcer\Response\ScrapeResponse::getDownloaded
+	 * @covers BitTorrent\Announcer\Response\ScrapeResponse::getIncomplete
+	 * @covers BitTorrent\Announcer\Response\ScrapeResponse::getName
+	 * @covers BitTorrent\Announcer\Response\ScrapeResponse::render
 	 */
 	public function testResponse() {
 		$this->response->setResponse(file_get_contents(__DIR__ . '/../Fixtures/response_scrape.bencode'));
