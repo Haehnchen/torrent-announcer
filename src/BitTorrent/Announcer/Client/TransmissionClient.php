@@ -50,6 +50,18 @@ class TransmissionClient extends Abstracts\TorrentClientAbstract implements Abst
 		);
 	}
 
+	function getExtraParameter() {
+		$parms = array();
+
+		if(version_compare($this->version, '1.5', '>=')) {
+			$parms = array(
+				'supportcrypto' => 1,
+			);
+		}
+
+		return $parms;
+	}
+
 	function supportsVersion($version) {
 		return $version == '0.6' OR version_compare($version, '1', '>=');
 	}
