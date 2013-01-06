@@ -218,11 +218,19 @@ class Request {
 
 	}
 
-	static function createOnTorrent(Torrent $torrent, TorrentClientInterface $client = null) {
+	static function createOnTorrent($torrent, TorrentClientInterface $client = null) {
 		$self = new static();
 
 		if($client !== null) {
 			$self->setTorrentClient($client);
+		}
+
+		if(is_string($torrent)) {
+			$torrent = Torrent::createFromTorrentFile($torrent);
+		}
+
+		if(!$torrent instanceof Torrent) {
+			throw new \RuntimeException('Unknown Torrent file');
 		}
 
 		return $self->setTorrentFile($torrent);

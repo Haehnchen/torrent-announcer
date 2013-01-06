@@ -159,6 +159,28 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @covers BitTorrent\Announcer\Request::createOnTorrent
+	 */
+	public function testCreateOnTorrent() {
+
+		$request = Request::createOnTorrent(__DIR__ . '/Fixtures/extra.torrent');
+		$this->assertEquals('b75b955e703dc3ec9696018c53be9cb940f27856', $request->getTorrentFile()->getHash());
+
+		$request = Request::createOnTorrent(Torrent::createFromTorrentFile(__DIR__ . '/Fixtures/extra.torrent'));
+		$this->assertEquals('b75b955e703dc3ec9696018c53be9cb940f27856', $request->getTorrentFile()->getHash());
+
+	}
+
+	/**
+	 * @expectedException RuntimeException
+	 * @expectedExceptionMessage Unknown Torrent file
+	 * @covers BitTorrent\Announcer\Request::createOnTorrent
+	 */
+	public function testCreateOnInvalidTorrent() {
+		Request::createOnTorrent(null);
+	}
+
+	/**
 	 * @return Request
 	 */
 	private function createRequest() {
